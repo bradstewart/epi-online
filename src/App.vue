@@ -40,47 +40,29 @@
     are valid cases for each. I just want to be clear what's controlling the
     page/viewport height.
   */
-  html, body, #app, .viewport {
+  html,
+  body,
+  #app,
+  .viewport {
     width: 100%;
     height: 100%;
     margin: 0;
   }
 
-  // TODO: Make sure the build system will auto-prefix
-  // these things correctly, then delete all of this
-  // garbage.
-
   /* items flex/expand vertically */
   .vbox {
-    display: -webkit-flex;
-    display:    -moz-flex;
-    display:     -ms-flex;
-    display:         flex;
-
-    -webkit-flex-direction: column;
-       -moz-flex-direction: column;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
 
   /* items flex/expand horizontally */
   .hbox {
-    display: -webkit-flex;
-    display:    -moz-flex;
-    display:     -ms-flex;
-    display:         flex;
-
-    -webkit-flex-direction: row;
-       -moz-flex-direction: row;
-        -ms-flex-direction: row;
-            flex-direction: row;
+    display: flex;
+    flex-direction: row;
   }
 
   .space-between {
-    -webkit-justify-content: space-between;
-       -moz-justify-content: space-between;
-        -ms-justify-content: space-between;
-            justify-content: space-between;
+    justify-content: space-between;
   }
 
   /* I went with a fixed height header & footer because it's a common case.
@@ -112,25 +94,15 @@
   }
 
   .main {
-    // -webkit-flex: 1;
-    //    -moz-flex: 1;
-    //     -ms-flex: 1;
-            flex: 1;
+    flex: 1;
   }
 
   .flex-col-3 {
-    // -webkit-flex: 2;
-    //    -moz-flex: 2;
-    //     -ms-flex: 2;
-            flex: 5;
+    flex: 5;
   }
 
   .flex-col-5 {
-    // /* current syntax */
-    // -webkit-flex: 3;
-    //    -moz-flex: 3;
-    //     -ms-flex: 3;
-            flex: 7;
+    flex: 7;
   }
 
   .flex-col {
