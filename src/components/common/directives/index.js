@@ -7,7 +7,12 @@ export const tooltip = {
   },
 
   update (value) {
-    this.el.dataset['tooltip'] = value
+    if (!value) {
+      return
+    }
+    
+    this.el.dataset['title'] = value
+    console.log(value)
     this.el.dataset['position'] = this._getPosition() || 'bottom'
 
     $(this.el).tooltip({

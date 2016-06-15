@@ -1,21 +1,17 @@
 <template>
-  <div v-el:editor :style="editorStyle"></div>
+  <div v-el:editor></div>
 </template>
 
 <script>
   /* global ace */
 
   // TODO: Make Language and Font-size configurable.
-  // 
+  //
   export default {
     props: {
       content: {
         type: String,
         default: '',
-      },
-      height: {
-        type: Number,
-        default: 300,
       },
       mode: {
         type: String,
@@ -41,14 +37,6 @@
       },
     },
 
-    computed: {
-      editorStyle () {
-        return {
-          height: `${this.height}px`,
-        }
-      },
-    },
-
     methods: {
       editorChanged (event) {
         this.editorIsUpdating = true
@@ -68,7 +56,7 @@
           e.setValue(this.content, 1)
           e.setOptions({
             autoScrollEditorIntoView: true,
-            maxLines: 15,
+            maxLines: Infinity,
             minLines: 8,
           })
 

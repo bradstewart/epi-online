@@ -23,8 +23,8 @@ Object.keys(commonDirectives).forEach((name) => {
 })
 
 import App from './App'
-import Problems from './components/problems/Index'
-import Problem from './components/problems/View'
+import ProblemsIndex from './components/ProblemsIndex'
+import ProblemsView from './components/ProblemsView'
 
 const router = new VueRouter({
   linkActiveClass: 'active',
@@ -33,11 +33,11 @@ const router = new VueRouter({
 router.map({
   '/': {
     name: 'problems',
-    component: Problems,
+    component: ProblemsIndex,
   },
   '/:group/:id': {
     name: 'problem',
-    component: Problem,
+    component: ProblemsView,
   }
 })
 

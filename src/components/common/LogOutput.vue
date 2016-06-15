@@ -32,9 +32,6 @@
       computedStyle () {
         return {
           'overflow': 'auto',
-          'margin-right': '-20px',
-          'height': `${this.height}px`,
-          'max-height': `${this.height}px`,
         }
       },
     },
