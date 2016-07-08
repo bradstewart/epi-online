@@ -1,9 +1,17 @@
 <template>
-  <div v-el:editor></div>
+  <div>
+    <div v-el:editor :style="editorStyle"></div>
+  </div>
+
 </template>
 
 <script>
   /* global ace */
+
+  const MODES = {
+    'java': true,
+    'c_cpp': true,
+  }
 
   // TODO: Make Language and Font-size configurable.
   //
@@ -16,10 +24,15 @@
       mode: {
         type: String,
         default: 'java',
+        validator: (val) => MODES[val],
       },
       theme: {
         type: String,
         default: 'github',
+      },
+      fontSize: {
+        type: String,
+        default: '12px',
       },
     },
 
@@ -33,6 +46,18 @@
       content (newValue, oldValue) {
         if (!this.editorIsUpdating) {
           this.editor.setValue(newValue, -1)
+        }
+      },
+
+      mode (newValue) {
+        this.editor.getSession().setMode(`ace/mode/${newValue}`)
+      },
+    },
+
+    computed: {
+      editorStyle () {
+        return {
+          'font-size': this.fontSize,
         }
       },
     },
