@@ -1,3 +1,26 @@
 @import "variables.less";
 @import "bootstrap/bootstrap.less";
 @import "bootswatch/bootswatch.less";
+
+.panel-flat {
+  box-shadow: none;
+}
+
+.btn-link {
+  color: @link-color;
+
+  &:hover,
+  &:focus,
+  &.active {
+    color: @link-hover-color;
+    background-color: darken(#fff, 12%);
+  }
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.tooltip-element {
+  transition: opacity 0.4s ease !important;
+}
