@@ -1,11 +1,14 @@
 import 'bootstrap'
+import 'keen-ui/dist/keen-ui.css'
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
+import KeenUI from 'keen-ui'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
+Vue.use(KeenUI)
 
 import * as commonComponents from './components/common'
 // Install common components globally so individual components

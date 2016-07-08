@@ -1,38 +1,63 @@
 <template>
   <div class="page">
     <div class="page-content">
-      <div v-el:instructions class="split split-horizontal">
-        <div style="padding: 8px">
+      <div v-el:instructions class="split split-horizontal" style="overflow: auto">
+        <div style="padding: 15px;">
           <div class="row-fluid" style="padding-bottom: 30px;">
             <h3 style="margin-top: 0;">{{ post.title }}</h3>
             <span class="label label-primary">Tag</span> <span class="label label-primary">Algorithms</span>
           </div>
-
-          <h4>Instructions</h4>
-          <p>{{{ post.problem }}}</p>
-          <!-- TODO: Make this show only on click. -->
-          <blockquote>
-            <strong style="display: block;">Hint</strong> {{ post.hint }}
-          </blockquote>
+          <div>{{{ post.problem }}}</div>
         </div>
       </div>
 
       <div v-el:solution class="split split-horizontal">
         <div v-el:solution-editor class="split">
-          <content-section title="Solution" icon="mode_comment" body-padding="0">
-            <ace-editor :content="post.skeleton"></ace-editor>
-          </content-section>
+
+          <panel title="Solution" body-padding="0">
+            <div class="actions" slot="actions">
+              <ui-select
+                name="language"
+                :value.sync="language"
+                :options="languages"
+                :default="language">
+              </ui-select>
+              <ui-select
+                name="fontSize"
+                :value.sync="fontSize"
+                :options="fontSizes"
+                :default="fontSize">
+              </ui-select>
+              <!-- <ui-icon-button
+                type="clear" color="black" icon="format_size"
+                tooltip="Font Size" tooltip-position="top center"
+                has-dropdown-menu show-menu-icons
+                :menu-options="menuOptions" dropdown-position="bottom right"
+              ></ui-icon-button>
+
+              <ui-icon-button
+                type="clear" color="black" icon="code" has-dropdown-menu
+                tooltip="Language" tooltip-position="top center"
+                :menu-options="editorActions" dropdown-position="bottom right"
+              ></ui-icon-button> -->
+            </div>
+            <ace-editor
+              :mode="language.value"
+              :font-size="fontSize.value"
+              :content="post.skeleton">
+            </ace-editor>
+          </panel>
         </div>
 
         <div v-el:solution-results class="split" >
-          <content-section title="Output" icon="message">
+          <panel title="Output" icon="message">
             <template v-if="result.tests">
               <log-output :buffer="output"></log-output>
             </template>
             <span v-else>
               Your output will appear here...
             </span>
-          </content-section>
+          </panel>
         </div>
       </div>
     </div>
@@ -40,20 +65,26 @@
     <div class="page-footer">
       <div class="pull-right">
 
-        <modal :show.sync="isSubmitting">
-          <p class="lead" style="margin: 0; text-align: center;">
-            Submitting...
-          </p>
-          <load-bar></load-bar>
-        </modal>
+
         <div class="actions">
 
-          <a class="icon-btn" v-tooltip.left="post.hint">
-            <i class="material-icons">help_outline</i> HINT
-          </a>
-        <a @click.prevent="submit" class="btn btn-primary">Submit</a>
+        <!-- <a @click.prevent="submit" class="btn btn-primary">Submit</a> -->
+        <ui-button data-toggle="button" v-popover.left="post.hint" flat icon-left icon="help" color="default">
+          HINT
+        </ui-button>
 
+        <ui-button @click.prevent="submit" raised icon-left icon="send" color="primary">
+          Submit
+        </ui-button>
           </div>
+          <modal :show.sync="isSubmitting">
+            <p class="lead" style="margin: 0; text-align: center;">
+              Submitting...
+            </p>
+            <load-bar></load-bar>
+          </modal>
+
+          <!-- <ui-popover :trigger="$els.hint" dropdown-position="left middle">{{ post.hint }}</ui-popover> -->
       </div>
 
     </div>
@@ -64,15 +95,43 @@
   import Split from 'split.js'
   import _ from 'lodash'
 
+  const LANGUAGES = [{
+    text: 'Java',
+    value: 'java',
+  }, {
+    text: 'C/C++',
+    value: 'c_cpp',
+  }]
+
+  const FONT_SIZES = [{
+    text: '12px',
+    value: '12px',
+  }, {
+    text: '14px',
+    value: '14px',
+  }]
+
   export default {
 
     data () {
       return {
         isSubmitting: false,
+        showHint: false,
+        language: LANGUAGES[0],
+        fontSize: FONT_SIZES[0],
         post: {},
         result: {},
         output: [],
       }
+    },
+
+    computed: {
+      languages () {
+        return LANGUAGES
+      },
+      fontSizes () {
+        return FONT_SIZES
+      },
     },
 
     methods: {
@@ -176,38 +235,27 @@
 <style lang="less">
   @import "~assets/less/variables";
 
+
+  .ui-toolbar.ui-toolbar-sm {
+    .ui-icon-button {
+      width: 32px;
+      height: 32px;
+
+      .ui-icon {
+        font-size: 20px;
+      }
+    }
+  }
   .actions {
-    a {
+    a,
+    div.ui-select {
       margin: 0 8px;
 
       &:last-child {
         margin-right: 0;
       }
-    }
-  }
-  .icon-btn {
-    height: 23px;
-    padding: 8px;
-    border-radius: 3px;
-    line-height: 24px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 13px;
-    vertical-align: middle;
-    border-width: 4px;
-    text-align: center;
-
-    i {
-      .transition(all 0.4s);
-      vertical-align: top;
-      padding-top: 6px;
-    }
-
-    &:hover {
-      text-decoration: none;
-      background-color: #f5f5f5;
-      i {
-        color: darken(@btn-primary-bg, 6%);
+      &:first-child {
+        margin-left: 0;
       }
     }
   }
@@ -255,20 +303,5 @@
       background-image: url('~split.js/grips/horizontal.png');
       cursor: row-resize;
     }
-  }
-
-  // TODO: Use less variables for these colors.
-
-  .well {
-    background: #fff;
-    margin: 0;
-  }
-  .accent-bg {
-    background: #f5f5f5;
-  }
-  .material-icons,
-  .fa {
-    color: @btn-primary-bg;
-    font-weight: 500;
   }
 </style>
