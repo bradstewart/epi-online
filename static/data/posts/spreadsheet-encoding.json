@@ -1,0 +1,8 @@
+{
+  "slug": "spreadsheet-encoding",
+  "title": "Compute the spreadsheet column encoding",
+  "hint": "There are 26 characters in [A, Z], and each can be mapped to an integer",
+  "problem": "Spreadsheets often use an alphabetical encoding of the successive columns. Specifically, columns are identified by \"A\", \"B\", ..., \"Y\", \"Z\", \"AA\", \"AB\", ..., \"ZZ\", \"AAA\", \"AAB\", ...\r\n   Implement a function that converts a spreadsheet column id to the corresponding integer, with \"A\" corresponding to 1. \r\n   For example, you should return 4 for \"D\", 27 for \"AA\", 702 for \"ZZ\", etc.",
+  "skeleton": "public static int ssDecodeColID(String col) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(\"A\", 1);\r\n   check(\"B\", 2);\r\n   check(\"Z\", 26);\r\n   check(\"AA\", 27);\r\n   check(\"AZ\", 52);\r\n   check(\"BA\", 53);\r\n   check(\"CPP\", 2460);\r\n   check(\"TESTS\", 9240783);"
+}

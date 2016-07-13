@@ -1,0 +1,8 @@
+{
+  "slug": "number-ways",
+  "title": "Count the number of ways to traverse a 2D array",
+  "hint": "If i > 0 and j > 0, you can get to (i, j) from (i - 1, j) or (j - 1, i).",
+  "problem": "In this problem you are to count the number of ways of starting at the top-left corner of a 2D array and getting to the bottom-right corner. All moves must either go right or down. For example, we show three ways in a 5 x 5 2D array array in <IMAGE HERE>. (But there are a total of 70 possible ways for this example.)",
+  "skeleton": "public static int numberOfWays(int n, int m) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(1, 1, 1);\r\ncheck(5, 5, 70);\r\ncheck(10, 10, 48620);\r\ncheck(1, 5, 1);\r\ncheck(3, 5, 15);\r\ncheck(6, 1, 1);\r\ncheck(6, 3, 21);"
+}

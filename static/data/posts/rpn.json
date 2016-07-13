@@ -1,0 +1,8 @@
+{
+  "slug": "rpn",
+  "title": "Evaluate RPN expression",
+  "hint": "Process subexpressions, keeping values in a stack. How should operators be handled",
+  "problem": "A string is said to be an arithmetical expression in reverse Polish notation (RPN) if:\r\n     (1.) It is a single digit or a sequence of digits, prefixed with an optional -.\r\n     (2.) It is of the form \"A, B, o\" where A and B are EPN expression and o is one of +, -, ×, /.\r\n   \r\n   An RPN expression can be evaluated uniquely to an integer. \r\n   \r\n   Write a program that takes an arithmetical expression in RPN and returns the number that the expression evaluates to.",
+  "skeleton": "public static int eval(String RPNExpression) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(\"1024\", 1024);\r\n   check(\"-1024\", -1024);\r\n   check(\"1000,24,+\", 1024);\r\n   check( \"1024,24,-\", 1000);\r\n   check(\"32,32,*\", 1024);\r\n   check(\"-10,-30,*\", 300);\r\n   check(\"1024,256,/\", 4);\r\n   check\"10,20,+,30,40,50,60,+,+,+,+\", 210);\r\n   check(\"7,3,*,4,2,/,-,3,5,-2,*,+,+\", 12);\r\n   check(\"25,4,*,50,/,18,24,*,50,12,-,36,64,*,72,/,-,+,+\", 440);"
+}

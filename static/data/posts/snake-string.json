@@ -1,0 +1,8 @@
+{
+  "slug": "snake-string",
+  "title": "Write a string sinusoidally",
+  "hint": "Try concrete examples, and look fror periodicity.",
+  "problem": "We illustrate what it means to write a string in sinusoudal fashion by means of an example. The string \"Hello World!\" written in sinusoidal fashion is <IMAGE HERE>.\r\nDefine the snakestring s to be the left-right-top-to-down sequence in which characters appear when s is written in sinusoidal fashion. For eample, the snakestring string for \"Hello World!\" is \"e lHloWrdlo!\".",
+  "skeleton": "public static String snakeString(String s) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(\"A\", \"A\");\r\ncheck(\"AB\", \"BA\");\r\ncheck(\"TEA\", \"ETA\");\r\ncheck(\"ACRE\", \"CARE\");\r\ncheck(\"SNAKE\", \"NSAEK\");\r\ncheck(\"OBJECTORIENTEDPROGRAMMING\", \"BTEDGMOJCOINEPORMIGERTRAN\");\r\ncheck(\"ELEMENTSOFPROGRAMMINGINTERVIEWS\", \"LNFGMIRWEEETOPORMIGNEVESMSRANTI\");"
+}
