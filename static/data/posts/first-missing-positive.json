@@ -2,7 +2,7 @@
   "slug": "first-missing-positive",
   "title": "Find the first missing positive entry",
   "hint": "First, find an upper bound for x",
-  "problem": "Let A be an array of length n. Design an algorithm to find the smallest positive integer which is not present in A. You do not need to preserve the contents of A.",
+  "problem": "Let A be an array of length n. Design an algorithm to find the smallest positive integer which is not present in A. You do not need to preserve the contents of A. <p> Examples: <pre>{1, 2, 3, 4} -> 5</pre><pre>{5, -9, 3, -8, 1, 8, 0} -> 2</pre>",
   "skeleton": "public static int findFirstMissingPositive(List<Integer> A) {\r\n    \/\/ Your solution here...\r\n}",
   "test": "check(new ArrayList<Integer>(), 1);\r\n   check(Arrays.asList(-9, -16, -3, -1, -4), 1);\r\n   check(Arrays.asList(1, 2, 3, 4, 5), 6);\r\n   check(Arrays.asList(5, 4, 3, 2, 1, 0), 6);\r\n   check(Arrays.asList(5, -9, 3, 2, 1, 0), 4);\r\n   check(Arrays.asList(5, -9, 3, -8, 1, 8, 0), 2);"
 }
