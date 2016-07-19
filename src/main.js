@@ -1,5 +1,4 @@
 import 'bootstrap'
-import 'keen-ui/dist/keen-ui.css'
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
