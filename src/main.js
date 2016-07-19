@@ -16,26 +16,30 @@ Vue.use(AppComponents)
 
 import App from './App'
 import ProblemsIndex from './components/ProblemsIndex'
-import ProblemsView from './components/ProblemsView'
-import ProblemsTestView from './components/ProblemsTestView'
+import ProblemsShow from './components/ProblemsShow'
+import ProblemsShowTest from './components/ProblemsShowTest'
 
 const router = new VueRouter({
   linkActiveClass: 'active',
 })
 
 router.map({
-  '/': {
-    name: 'problems',
+  '/problems': {
+    name: 'problems.index',
     component: ProblemsIndex,
   },
-  '/:group/:id': {
-    name: 'problem',
-    component: ProblemsView,
+  '/problems/:group/problem/:id': {
+    name: 'problems.show',
+    component: ProblemsShow,
   },
   '/problems/test': {
     name: 'problems.test',
-    component: ProblemsTestView,
+    component: ProblemsShowTest,
   }
+})
+
+router.redirect({
+  '/': '/problems',
 })
 
 router.start(App, '#app')

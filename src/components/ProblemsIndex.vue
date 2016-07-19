@@ -8,7 +8,7 @@
     <div class="list-group">
       <a
         v-for="post in group.posts"
-        v-link="{ name: 'problem', params: { group: group.id, id: post.slug }}"
+        v-link="{ name: 'problems.show', params: { group: group.id, id: post.slug }}"
         class="list-group-item">
         {{ post.title }}
       </a>
