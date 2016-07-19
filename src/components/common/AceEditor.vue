@@ -20,6 +20,7 @@
       content: {
         type: String,
         default: '',
+        twoWay: true,
       },
       mode: {
         type: String,

@@ -44,14 +44,14 @@
             <ace-editor
               :mode="language.value"
               :font-size="fontSize.value"
-              :content="post.skeleton">
+              :content.sync="post.skeleton">
             </ace-editor>
           </panel>
         </div>
 
         <div v-el:solution-results class="split" >
           <panel title="Output" icon="message">
-            <template v-if="result.tests">
+            <template v-if="output.length">
               <log-output :buffer="output"></log-output>
             </template>
             <span v-else>
@@ -106,7 +106,6 @@
         language: LANGUAGES[0],
         fontSize: EDITOR_FONT_SIZES[0],
         post: {},
-        result: {},
         output: [],
       }
     },
@@ -124,12 +123,14 @@
       log (...data) {
         this.output.push(...data)
       },
+
       fetchPost (id) {
         return this.$http
           .get({ url: `/static/data/posts/${id}.json`})
           .then((res) => res.data)
           .catch((err) => console.error(err))
       },
+
       reset () {
         if (confirm('Reset?')) {
           this.fetchPost(this.$route.params.id).then((post) => {
@@ -137,58 +138,86 @@
           })
         }
       },
+
       submit () {
         this.isSubmitting = true
         this.log(`<strong>Submission started @ ${new Date().toISOString()}</strong><br />`)
 
+        return this
+          .$http
+          .post({
+            url: 'http://epijudge.ddns.net:3000/compile',
+            data: JSON.stringify({
+              language: this.language.compileBoxId,
+              code: this.post.skeleton,
+              stdIn: 'TODO',
+            }),
+            method: 'POST',
+          })
+          .then((response) => {
+            this._handleResponse(response)
+            this.isSubmitting = false
+          })
+          .catch((err) => {
+            this.isSubmitting = false
+            console.error(err)
+          })
+
         // Add some "async"
+        // setTimeout(() => {
+        //   return this.$http
+        //     .get({ url: `/static/data/result.json`})
+        //     .then((response) => {
+        //       this._handleResponse(response)
+        //       this.isSubmitting = false
+        //     })
+        //     .catch((err) => {
+        //       this.isSubmitting = false
+        //       console.error(err)
+        //     })
+        //   }, Math.round(Math.random()*1500) + 500)
+      },
+
+      _handleResponse (response) {
+        let { output, errors, test } = response.data
+
+        this.log(output)
+
+        if (errors) return this.log(errors)
+
+        let passed = 0
+
+        tests.forEach((test) => {
+          if (test.status === 'ok') passed++
+
+          // TODO: Format failures differently (display inputs).
+          // TODO: Display check mark when all passing.
+
+          this.log(
+            `    ${test.status}\t${_.padEnd(test.description, 25)}\t--\tExpected: ${test.expected_output} \t Actual: ${test.user_output}`
+          )
+        })
+
+        this.log(`<strong>Passed ${passed}/${tests.length}</strong><br /><br />`)
+      },
+
+      _initDraggablePanels () {
+        Split([this.$els.instructions, this.$els.solution], {
+          sizes: [40, 60],
+          minSize: 100,
+        })
+
         setTimeout(() => {
-          return this.$http
-            .get({ url: `/static/data/result.json`})
-            .then((res) => {
-              this.result = res.data
-
-              let passed = 0
-              res.data.tests.forEach((test) => {
-                if (test.status === 'ok') {
-                  passed++
-                }
-                // TODO: Format failures differently (display inputs).
-                // TODO: Display check mark when all passing.
-
-                this.output.push(
-                  `    ${test.status}\t${_.padEnd(test.description, 25)}\t--\tExpected: ${test.expected_output} \t Actual: ${test.user_output}`
-                )
-              })
-
-              this.log(`<strong>Passed ${passed}/${res.data.tests.length}</strong><br /><br />`)
-              this.isSubmitting = false
-            })
-            .catch((err) => {
-              this.isSubmitting = false
-              console.error(err)
-            })
-          }, Math.round(Math.random()*1500) + 500)
-      }
+          Split([this.$els.solutionEditor, this.$els.solutionResults], {
+            sizes: [70, 30],
+            direction: 'vertical'
+          })
+        })
+      },
     },
 
     ready () {
-      Split([this.$els.instructions, this.$els.solution], {
-        sizes: [40, 60],
-        minSize: 100,
-        // direction: 'vertical'
-      })
-
-      setTimeout(() => {
-        Split([this.$els.solutionEditor, this.$els.solutionResults], {
-          sizes: [70, 30],
-          // minSize: 100,
-          // gutterSize: 2,
-          direction: 'vertical'
-        })
-      })
-
-
+      this._initDraggablePanels()
     },
 
     route: {
