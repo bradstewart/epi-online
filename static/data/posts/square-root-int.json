@@ -1,0 +1,8 @@
+{
+  "slug": "square-root-int",
+  "title": "Compute the integer square root",
+  "hint": "Look out for a corner-case.",
+  "problem": "Write a program which takes a nonnegative integer and returns the largest integer whose square is less than or equal to the given integer.",
+  "skeleton": "public static int squareRoot(int k) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(0, 0);\r\ncheck(1, 1);\r\ncheck(2, 1);\r\ncheck(3, 1);\r\ncheck(4, 2);\r\ncheck(8, 2);\r\ncheck(9, 3);\r\ncheck(64, 8);\r\ncheck(121, 11);\r\ncheck(300, 17);\r\ncheck(2147483647, 46340);"
+}

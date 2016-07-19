@@ -3,6 +3,6 @@
   "title": "Is an anonymous letter constructible?",
   "hint": "Count the number of distinct characters appearing in the letter.",
   "problem": "Write a program which takes text for an anonymous letter and text for a\r\n   magazine\r\n   and determines if it is possible to write the anonymous letter using the\r\n   magazine.\r\n   The anonymous letter can be written using the magazine if for each character\r\n   in the\r\n   anonymous letter, the number of times it appears in the anonymous letter is\r\n   no more\r\n   than the number of times it appears in the magazine.",
-  "skeleton": "public static boolean isLetterConstructibleFromMagazine(String letterText,\r\n                                                          String magazineText) {\r\n    \/\/ You solution here...\r\n}",
+  "skeleton": "public static boolean isLetterConstructibleFromMagazine(String letterText,\r\n                                                          String magazineText) {\r\n    \/\/ Your solution here...\r\n}",
   "test": "check(\"123\", \"456\", false);\r\ncheck(\"123\", \"12222222\", false);\r\ncheck(\"123\", \"1123\", true);\r\ncheck(\"123\", \"123\", true);\r\ncheck(\"12323\", \"123\", false);\r\ncheck(\"GATTACA\", \"A AD FS GA T ACA TTT\", true);\r\ncheck(\"a\", \"\", false);\r\ncheck(\"aa\", \"aa\", true);\r\ncheck(\"aa\", \"aaa\", true);\r\ncheck(\"\", \"123\", true);\r\ncheck(\"\", \"\", true);"
 }

@@ -1,0 +1,8 @@
+{
+  "slug": "palindrome-number",
+  "title": "Check if a decimal integer is a palindrome",
+  "hint": "It's easy to come up with a simple expression that extracts the least significant digit. Can you find a simple expression for the most significant digit?",
+  "problem": "A palindromic string is one which reads the same forwards and backwards, e.g., \"redivider\". <p> In this problem, you are to write a program which determines if the decimal representation of an integer is a palindromic string.",
+  "skeleton": "public static boolean isPalindromeNumber(int x) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(-1, false);\r\ncheck(-1001, false);\r\ncheck(-2147483647, false);\r\ncheck(-2147483648, false);\r\ncheck(0, true);\r\ncheck(1, true);\r\ncheck(9, true);\r\ncheck(52125, true);\r\ncheck(521125, true);\r\ncheck(52105, false);\r\ncheck(520125, false);\r\ncheck(2147483646, false);\r\ncheck(2147483647, false);"
+}
