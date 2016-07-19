@@ -95,21 +95,7 @@
   import Split from 'split.js'
   import _ from 'lodash'
 
-  const LANGUAGES = [{
-    text: 'Java',
-    value: 'java',
-  }, {
-    text: 'C/C++',
-    value: 'c_cpp',
-  }]
-
-  const FONT_SIZES = [{
-    text: '12px',
-    value: '12px',
-  }, {
-    text: '14px',
-    value: '14px',
-  }]
+  import { LANGUAGES, EDITOR_FONT_SIZES } from 'src/constants'
 
   export default {
 
@@ -118,7 +104,7 @@
         isSubmitting: false,
         showHint: false,
         language: LANGUAGES[0],
-        fontSize: FONT_SIZES[0],
+        fontSize: EDITOR_FONT_SIZES[0],
         post: {},
         result: {},
         output: [],
@@ -130,7 +116,7 @@
         return LANGUAGES
       },
       fontSizes () {
-        return FONT_SIZES
+        return EDITOR_FONT_SIZES
       },
     },
 
