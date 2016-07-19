@@ -1,29 +1,38 @@
 <template>
-  <div v-el:editor :style="editorStyle"></div>
+  <div>
+    <div v-el:editor :style="editorStyle"></div>
+  </div>
+
 </template>
 
 <script>
   /* global ace */
 
+  const MODES = {
+    'java': true,
+    'c_cpp': true,
+  }
+
   // TODO: Make Language and Font-size configurable.
-  // 
+  //
   export default {
     props: {
       content: {
         type: String,
         default: '',
       },
-      height: {
-        type: Number,
-        default: 300,
-      },
       mode: {
         type: String,
         default: 'java',
+        validator: (val) => MODES[val],
       },
       theme: {
         type: String,
         default: 'github',
+      },
+      fontSize: {
+        type: String,
+        default: '12px',
       },
     },
 
@@ -39,12 +48,16 @@
           this.editor.setValue(newValue, -1)
         }
       },
+
+      mode (newValue) {
+        this.editor.getSession().setMode(`ace/mode/${newValue}`)
+      },
     },
 
     computed: {
       editorStyle () {
         return {
-          height: `${this.height}px`,
+          'font-size': this.fontSize,
         }
       },
     },
@@ -68,7 +81,7 @@
           e.setValue(this.content, 1)
           e.setOptions({
             autoScrollEditorIntoView: true,
-            maxLines: 15,
+            maxLines: Infinity,
             minLines: 8,
           })
 

@@ -15,6 +15,8 @@
       </div>
     </div>
   </footer>
+</template>
+
 <script>
   export default {
 
@@ -22,21 +24,21 @@
 </script>
 
 <style lang="less" scoped>
-  @import "assets/less/variables";
+  @import "~assets/less/variables";
 
-
-  // .footer {
-  //   p,
-  //   span,
-  //   strong {
-  //     line-height: 60px;
-  //   }
-  // }
-  .actions {
-    margin: 13.5px 0;
-    a {
-      height: 35px;
-      cursor: pointer;
+  footer {
+    background-color: @brand-primary;
+    p {
+      line-height: @footer-height !important;
+      color: #fff;
+      margin: 0;
+    }
+    .actions {
+      margin: 13.5px 0;
+      a {
+        height: 35px;
+        cursor: pointer;
+      }
     }
   }
 </style>

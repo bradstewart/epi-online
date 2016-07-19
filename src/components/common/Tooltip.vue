@@ -2,7 +2,7 @@
   <span v-el:tooltip class="tooltipped"
     :data-position="position"
     data-delay="50"
-    :data-tooltip="content">
+    :data-title="content">
     <slot></slot>
   </span>
 </template>
@@ -22,6 +22,7 @@
 
     ready () {
       $(this.$els.tooltip).tooltip()
+      console.log('TOOOLTIPPP')
     }
   }
 </script>

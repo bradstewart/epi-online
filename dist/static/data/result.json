@@ -1,0 +1,78 @@
+{
+  "problem_id":"14",
+  "problem_name":"Transform string to other",
+  "tests":[
+    {
+      "description":"Trivial test",
+      "type":"normal",
+      "input":{
+        "dictionary":"[code]",
+        "initial string":"code",
+        "target string":"code"
+      },
+      "expected_output":"0",
+      "status":"ok",
+      "user_output":"0"
+    },
+    {
+      "description":"One substitution test",
+      "type":"normal",
+      "input":{
+        "dictionary":"[care, code, mode, node, core]",
+        "initial string":"code",
+        "target string":"core"
+      },
+      "expected_output":"1",
+      "status":"ok",
+      "user_output":"1"
+    },
+    {
+      "description":"Impossible transform test",
+      "type":"normal",
+      "input":{
+        "dictionary":"[care, mars, node, mode, core, code]",
+        "initial string":"code",
+        "target string":"mars"
+      },
+      "expected_output":"-1",
+      "status":"ok",
+      "user_output":"-1"
+    },
+    {
+      "description":"Different length test #1",
+      "type":"normal",
+      "input":{
+        "dictionary":"[care, mars, node, mode, core, code]",
+        "initial string":"code",
+        "target string":"codes"
+      },
+      "expected_output":"-1",
+      "status":"ok",
+      "user_output":"-1"
+    },
+    {
+      "description":"Different length test #2",
+      "type":"normal",
+      "input":{
+        "dictionary":"[care, mars, node, mode, core, code]",
+        "initial string":"codes",
+        "target string":"code"
+      },
+      "expected_output":"-1",
+      "status":"ok",
+      "user_output":"-1"
+    },
+    {
+      "description":"Huge test",
+      "type":"normal",
+      "input":{
+        "dictionary":"[mars, zone, mode, bone, coke, none, care, fans, code, done, node, cars, core, cone, case, caps, cans, race, tire]",
+        "initial string":"code",
+        "target string":"mars"
+      },
+      "expected_output":"4",
+      "status":"ok",
+      "user_output":"4"
+    }
+  ]
+}

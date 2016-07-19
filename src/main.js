@@ -1,11 +1,14 @@
 import 'bootstrap'
+import 'keen-ui/dist/keen-ui.css'
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
+import KeenUI from 'keen-ui'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
+Vue.use(KeenUI)
 
 import * as commonComponents from './components/common'
 // Install common components globally so individual components
@@ -18,13 +21,13 @@ import * as commonDirectives from './components/common/directives'
 // Install common components globally so individual components
 // do not each have to import and install them.
 Object.keys(commonDirectives).forEach((name) => {
-  console.log(name)
   Vue.directive(name, commonDirectives[name])
 })
 
 import App from './App'
-import Problems from './components/problems/Index'
-import Problem from './components/problems/View'
+import ProblemsIndex from './components/ProblemsIndex'
+import ProblemsView from './components/ProblemsView'
+import ProblemsTestView from './components/ProblemsTestView'
 
 const router = new VueRouter({
   linkActiveClass: 'active',
@@ -33,11 +36,15 @@ const router = new VueRouter({
 router.map({
   '/': {
     name: 'problems',
-    component: Problems,
+    component: ProblemsIndex,
   },
   '/:group/:id': {
     name: 'problem',
-    component: Problem,
+    component: ProblemsView,
+  },
+  '/problems/test': {
+    name: 'problems.test',
+    component: ProblemsTestView,
   }
 })
 

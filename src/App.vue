@@ -1,10 +1,12 @@
 <template>
-  <div class="vbox viewport">
+  <div id="app">
     <app-header></app-header>
-    <section class="main hbox" style="justify-content: space-around">
-      <router-view></router-view>
-    </section>
-    <!-- <app-footer></app-footer> -->
+    <div id="content-container">
+      <div id="content">
+        <router-view></router-view>
+      </div>
+    </div>
+    <app-footer></app-footer>
   </div>
 </template>
 
@@ -24,90 +26,44 @@
   @import "assets/less/main";
 
   ///
-  // Flexbox layout stuff.
-  ////
+  // General Layout
+  ///
 
-  /*
-    Force full width & height.
-
-    If this block is removed, the layout height/length will be determined by
-    the amount of content in the page. That might result in a page which has
-    a footer only a few inches from the top of the viewport, or one which
-    scrolls beyond the viewport.
-
-    This forces the layout to always be full screen regardless of how much,
-    or how little, content is in place. Neither is "right" or "wrong", there
-    are valid cases for each. I just want to be clear what's controlling the
-    page/viewport height.
-  */
   html,
   body,
-  #app,
-  .viewport {
+  #app {
     width: 100%;
     height: 100%;
     margin: 0;
+    padding: 0;
   }
 
-  /* items flex/expand vertically */
-  .vbox {
-    display: flex;
-    flex-direction: column;
+  header,
+  footer {
+    width: 100%;
+    position: fixed;
   }
 
-  /* items flex/expand horizontally */
-  .hbox {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .space-between {
-    justify-content: space-between;
-  }
-
-  /* I went with a fixed height header & footer because it's a common case.
-    This could easily be altered to flex proportionally with the page.
-  */
-  header, footer {
-    height: 65px;
+  header {
+    height: @header-height;
+    top: 0;
   }
 
   footer {
-    // border-top: 1px solid @gray;
-    // background-color: @brand-primary;
-    // background-color: #f5f5f5;
-    // z-index: 33300303000;
-    // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    // border: 1px solid #eee;
-    p {
-      line-height: 65px !important;
-      color: #fff;
-      margin: 0;
-    }
-    .actions {
-      margin: 13.5px 0;
-      a {
-        height: 35px;
-        cursor: pointer;
-      }
-    }
+    height: @footer-height;
+    bottom: 0;
   }
 
-  .main {
-    flex: 1;
+  #content-container {
+    height: 100vh;
+    margin: 0 auto;
+    padding: @header-height 0 @footer-height 0;
+    overflow: hidden;
   }
 
-  .flex-col-3 {
-    flex: 5;
-  }
-
-  .flex-col-5 {
-    flex: 7;
-  }
-
-  .flex-col {
-    padding: 2rem;
-    overflow: auto;
+  #content {
+    overflow-y: auto;
+    height: 100%;
   }
 
   ////
