@@ -12,7 +12,7 @@
         </ui-button>
       </div>
     </div>
-    <div class="page-content">
+    <div class="page-content" style="height: calc(100% - 160px);">
 
       <div v-el:instructions class="split split-horizontal" style="overflow: auto">
         <div style="padding: 15px;">
@@ -282,7 +282,7 @@
     padding: 8px;
 
     .page-content {
-      height: calc(~"100% - 160px"); // .page-footer height! + TEST INPUT HEIGHT
+      // height: calc(~"100% - 45px"); // .page-footer height! + TEST INPUT HEIGHT
     }
 
     .page-footer {
