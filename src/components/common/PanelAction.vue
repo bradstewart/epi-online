@@ -1,8 +1,4 @@
 <template>
-  <div class="panel panel-flat">
-    <div class="panel-heading">
-      <h5 >{{ title }}</h5>
-
       <div v-if="actions" class="panel-actions">
         <a v-for="action in actions" class="panel-action" aria-hidden="true">
           <i :class="iconClass(action.icon)" v-tooltip.top="action.title"></i>
@@ -15,11 +11,6 @@
         </a> -->
         <!-- <slot name="actions"></slot> -->
       </div>
-    </div>
-    <div :style="bodyStyle" class="panel-body">
-      <slot></slot>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -57,68 +48,21 @@
 <style lang="less" scoped>
   @import "~assets/less/variables";
 
-  .panel-flat {
-    box-shadow: none;
+  .panel-action {
+    display: inline-block;
+    padding: 8px 6px;
+    cursor: pointer;
+    text-decoration: none;
 
-    .panel-heading {
-      position: relative;
-      border-bottom: 1px solid #f5f5f5;
-    }
-  }
+    .fa, .zmdi {
+      color: @gray-light;
+      font-weight: 500;
 
-  .panel-actions {
-    position: absolute;
-    top: 50%;
-    right: 30px;
-    margin: auto;
-    transform: translate(0,-50%);
-
-    .panel-action {
-      display: inline-block;
-      padding: 8px 6px;
-      cursor: pointer;
-      text-decoration: none;
-
-      .fa, .zmdi {
-        color: @gray-light;
-        font-weight: 500;
-
-        .transition(all 0.4s);
-        &:hover {
-          color: @link-color;
-          font-weight: 700;
-        }
+      .transition(all 0.4s);
+      &:hover {
+        color: @link-color;
+        font-weight: 700;
       }
     }
   }
-  @title-font-size: 18px;
-
-  .panel {
-    height: 100%;
-    overflow: hidden;
-    background-color: #fff;
-  }
-
-  .panel-body {
-    height: calc(~"100% - 60px"); // 50px is the header height!
-    overflow: auto;
-  }
-
-  .content-section-title {
-    line-height: 40px;
-  }
-
-  .content-section-heading {
-    font-size: @title-font-size;
-    font-weight: 500;
-    padding: 8px;
-    border-bottom: 1px solid #f5f5f5;
-    height: 60px;
-  }
-  .material-icons {
-    vertical-align: text-bottom;
-    font-size: @title-font-size + 4;
-    color: #0c7cd5;
-  }
-
 </style>

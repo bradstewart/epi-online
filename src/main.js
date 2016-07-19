@@ -5,24 +5,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import KeenUI from 'keen-ui'
+import AppDirectives from './components/directives'
+import AppComponents from './components/common'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(KeenUI)
-
-import * as commonComponents from './components/common'
-// Install common components globally so individual components
-// do not each have to import and install them.
-Object.keys(commonComponents).forEach((name) => {
-  Vue.component(name, commonComponents[name])
-})
-
-import * as commonDirectives from './components/common/directives'
-// Install common components globally so individual components
-// do not each have to import and install them.
-Object.keys(commonDirectives).forEach((name) => {
-  Vue.directive(name, commonDirectives[name])
-})
+Vue.use(AppDirectives)
+Vue.use(AppComponents)
 
 import App from './App'
 import ProblemsIndex from './components/ProblemsIndex'
