@@ -1,21 +1,90 @@
-[{
-  "id": "1",
-  "title": "Group 1",
-  "posts": [{
-    "slug": "anonymous-letter",
-    "title": "Is an anonymous letter constructible?"
-  },{
-    "slug": "is-binary-tree-balanced",
-    "title": "Test if a binary tree is balanced."
-  }]
-},{
-  "id": "2",
-  "title": "Group 2",
-  "posts": [{
-    "slug": "anonymous-letter",
-    "title": "Is an anonymous letter constructible?"
-  },{
-    "slug": "is-binary-tree-balanced",
-    "title": "Test if a binary tree is balanced."
-  }]
-}]
+[
+  {
+    "id": 0,
+    "title": "Group 0",
+    "posts": [
+      {
+        "slug": "anonymous-letter",
+        "title": "Is an anonymous letter constructible?"
+      },
+      {
+        "slug": "container-with-most-water",
+        "title": "Compute the maximum water trapped by a pair of vertical lines"
+      },
+      {
+        "slug": "convert-base",
+        "title": "Base conversion"
+      },
+      {
+        "slug": "first-missing-positive",
+        "title": "Find the first missing positive entry"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "title": "Group 1",
+    "posts": [
+      {
+        "slug": "gassing-up",
+        "title": "The gasup problem"
+      },
+      {
+        "slug": "intersect-sorted-arrays",
+        "title": "Compute the intersection of two sorted arrays"
+      },
+      {
+        "slug": "is-binary-tree-balanced",
+        "title": "Test if a binary tree is balanced."
+      },
+      {
+        "slug": "matrix-search",
+        "title": "Search in a 2D sorted array"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Group 2",
+    "posts": [
+      {
+        "slug": "normalize-pathnames",
+        "title": "Normalize pathnames"
+      },
+      {
+        "slug": "number-ways",
+        "title": "Count the number of ways to traverse a 2D array"
+      },
+      {
+        "slug": "palindrome-number",
+        "title": "Check if a decimal integer is a palindrome"
+      },
+      {
+        "slug": "rpn",
+        "title": "Evaluate RPN expression"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Group 3",
+    "posts": [
+      {
+        "slug": "snake-string",
+        "title": "Write a string sinusoidally"
+      },
+      {
+        "slug": "spreadsheet-encoding",
+        "title": "Compute the spreadsheet column encoding"
+      },
+      {
+        "slug": "square-root-int",
+        "title": "Compute the integer square root"
+      },
+      {
+        "slug": "sudoku-solve",
+        "title": "Implement a Sudoku solver"
+      }
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "slug": "convert-base",
+  "title": "Base conversion",
+  "hint": "What base can you easily convert to and from?",
+  "problem": "Write a program that performs base conversion. The input is a string, an integer b1, and another integer b2. The string represents an integer in base b1. The output should be the string representing the integer in base b2. Assume 2 ≤ b1, b2 ≤ 16. <p> Example conversions: <pre>\"FF\" (16) = \"255\" (10)</pre><pre>\"-20\" (10) = \"-202\" (3)</pre>",
+  "skeleton": "public static String convertBase(String s, int b1, int b2) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(\"0\", 10, 10, \"0\");\r\n   check(\"10\", 10, 10, \"10\");\r\n   check(\"-20\", 10, 10, \"-20\");\r\n   check(\"2147483647\", 10, 10, \"2147483647\");\r\n   check(\"-2147483647\", 10, 10, \"-2147483647\");\r\n   check(\"10\", 2, 2, \"10\");\r\n   check(\"-20\", 3, 3, \"-20\");\r\n   check(\"1000100001111010\", 2, 16, \"887A\");\r\n   check(\"111000100001111010\", 2, 16, \"3887A\");\r\n   check(\"101100001111010\", 2, 8, \"54172\");\r\n   check(\"-1101100001111010\", 2, 8, \"-154172\");\r\n   check(\"255\", 10, 16, \"FF\");\r\n   check(\"-20\", 10, 3, \"-202\");\r\n   check(\"2147483647\", 10, 16, \"7FFFFFFF\");"
+}
