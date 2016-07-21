@@ -22,6 +22,9 @@ npm run e2e
 
 # run all tests
 npm test
+
+# build for production and deploy to firebase
+npm run deploy
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
