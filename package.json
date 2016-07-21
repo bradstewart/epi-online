@@ -9,7 +9,6 @@
     "build": "npm run index-posts && node build/build.js",
     "index-posts": "node build/index-posts.js",
     "test": "",
-    "start": "node server.js",
     "firebase:login": "./node_modules/.bin/firebase login",
     "firebase:deploy": "./node_modules/.bin/firebase deploy",
     "deploy": "npm run firebase:login && npm run build && npm run firebase:deploy"
