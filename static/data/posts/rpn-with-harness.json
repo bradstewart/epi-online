@@ -1,0 +1,9 @@
+{
+  "slug": "rpn",
+  "title": "Evaluate RPN expression",
+  "hint": "Process subexpressions, keeping values in a stack. How should operators be handled",
+  "problem": "A string is said to be an arithmetical expression in reverse Polish notation (RPN) if: <ol> <li> It is a single digit or a sequence of digits, prefixed with an optional <b>-</b> </li> <li>It is of the form \"A, B, o\" where A and B are RPN expression and o is one of <b>+</b>, <b>-</b>, <b>×</b>, <b>\/</b> </li> </ol> An RPN expression can be evaluated uniquely to an integer. Here is an example of an RPN expression. <pre>7, 3, +, 4, 2, /, / = (7+3) / (4/2) = 5 </pre> <p> Write a program that takes an arithmetical expression in RPN and returns the number that the expression evaluates to.",
+  "skeleton": "public static int eval(String RPNExpression) {\r\n    \/\/ Your solution here...\r\n}",
+  "test": "check(\"1024\", 1024);\r\n   check(\"-1024\", -1024);\r\n   check(\"1000,24,+\", 1024);\r\n   check( \"1024,24,-\", 1000);\r\n   check(\"32,32,*\", 1024);\r\n   check(\"-10,-30,*\", 300);\r\n   check(\"1024,256,/\", 4);\r\n   check\"10,20,+,30,40,50,60,+,+,+,+\", 210);\r\n   check(\"7,3,*,4,2,/,-,3,5,-2,*,+,+\", 12);\r\n   check(\"25,4,*,50,/,18,24,*,50,12,-,36,64,*,72,/,-,+,+\", 440);",
+  "harness": "import java.util.Deque;\r\nimport java.util.LinkedList;\r\n\r\npublic class RPN {\r\n  \/\/ @include\r\n  FILL_ME_CODE\r\n  \/\/ @exclude\r\n\r\n  public static void main(String[] args) {\r\n    assert(0 == eval(\"2,-10,\/\"));\r\n    assert(-5 == eval(\"-10,2,\/\"));\r\n    assert(5 == eval(\"-10,-2,\/\"));\r\n    assert(-5 == eval(\"5,10,-\"));\r\n    assert(6 == eval(\"-10,-16,-\"));\r\n    assert(12 == eval(\"10,2,+\"));\r\n    assert(15 == eval(\"1,2,+,3,4,*,+\"));\r\n    assert(42 == eval(\"1,2,3,4,5,+,*,+,+,3,4,*,+\"));\r\n    assert(-6 == eval(\"1,2,3,4,5,+,*,+,+,3,4,*,+,-7,\/\"));\r\n  }\r\n}"
+}
