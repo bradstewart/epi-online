@@ -1,8 +1,12 @@
 import argparse
 import sys
 import json
+import re
 
-INSERT_ME_MARKER = "//INSERT_ME\n"
+
+INSERT_ME_TAG = "//INSERT_ME\n"
+
+tag_re = re.compile('\/\/\s*@')
 
 
 class Token:
@@ -22,9 +26,10 @@ class BaseFilter:
         for t in self.targets:
             ctx.setdefault(t, "")
 
-    def process(self, line, tok):
-        for t in self.targets:
-            self.ctx[t] += line
+    def process(self, line):
+        if not tag_re.match(line):
+            for t in self.targets:
+                self.ctx[t] += line
 
     def get_ignore(self):
         return get_filter(self.ctx, None)
@@ -37,7 +42,9 @@ class SkeletonFilter(BaseFilter):
 
     def get_ignore(self):
         if not self.marker_inserted:
-            self.process(INSERT_ME_MARKER, None)
+            self.process('    // Your solution here...\n')
+            self.ctx.setdefault("harness", "")
+            self.ctx["harness"] += INSERT_ME_TAG
             self.marker_inserted = True
         return BaseFilter.get_ignore(self)
 
@@ -114,7 +121,7 @@ def process(filename: str, base_folder: str):
     for line in stream:
         tok = get_token(line)
         if tok == Token.TEXT:
-            filter_stack[-1].process(line, tok)
+            filter_stack[-1].process(line)
         elif tok == Token.INCLUDE:
             stream.insert_file(base_folder + process_include(line))
         elif tok == Token.END:
