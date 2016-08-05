@@ -3,7 +3,6 @@ import sys
 import json
 import re
 
-
 INSERT_ME_TAG = "//INSERT_ME\n"
 
 tag_re = re.compile('\/\/\s*@')
@@ -112,7 +111,8 @@ def process_include(line: str, prefix="pg_include"):
     return line[pos:-1].strip()
 
 
-def process(filename: str, base_folder: str):
+def process(filename: str):
+    base_folder = filename.rpartition('/')[0] + '/'
     ctx = dict()
     filter_stack = [get_filter(ctx, None)]
     stream = LineStream()
@@ -137,16 +137,22 @@ def process(filename: str, base_folder: str):
 
 
 parser = argparse.ArgumentParser(description="Generate problem post in JSON format for EPI frontend.")
-parser.add_argument('-l', dest='lang', choices=['cpp', 'java'], required=True, help='language')
-parser.add_argument('-f', dest='file', required=True, help='test file')
-parser.add_argument('-t', dest='template', required=True, help='JSON template file')
-parser.add_argument('-o', dest='output', required=True, help='JSON output file')
+parser.add_argument('--cpp', help='cpp file to process')
+parser.add_argument('--java', help='java file to process')
+parser.add_argument('--template', required=True, help='JSON template file')
+parser.add_argument('--output', required=True, help='JSON output file')
+
 config = parser.parse_args()
-
-folder = config.file.rpartition('/')[0] + '/'
-
-cpp = process(config.file, folder)
+code = dict()
+if config.cpp is not None:
+    if "cpp" in code:
+        print("Warning: rewriting cpp harness")
+    code["cpp"] = process(config.cpp)
+if config.java is not None:
+    if "java" in code:
+        print("Warning: rewriting java harness")
+    code["java"] = process(config.java)
 
 template = json.load(open_or_exit(config.template))
-template["cpp"] = cpp
+template["code"] = code
 json.dump(template, open_or_exit(config.output, mode='w'))
