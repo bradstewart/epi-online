@@ -18,10 +18,11 @@ using std::pair;
 using std::tie;
 using std::unique_ptr;
 
+// @pg_impl
 struct BalancedStatusWithHeight;
 BalancedStatusWithHeight CheckBalanced(
     const unique_ptr<BinaryTreeNode<int>>&);
-
+// @pg_end
 // @pg_header
 // @include
 struct BalancedStatusWithHeight {
@@ -31,12 +32,12 @@ struct BalancedStatusWithHeight {
 // @pg_end
 // @pg_skeleton
 bool IsBalanced(const unique_ptr<BinaryTreeNode<int>>& tree) {
-// @pg_ignore
+// @pg_impl
   return CheckBalanced(tree).balanced;
 // @pg_end  
 }
 // @pg_end
-// @pg_ignore
+// @pg_impl
 // First value of the return value indicates if tree is balanced, and if
 // balanced the second value of the return value is the height of tree.
 BalancedStatusWithHeight CheckBalanced(
@@ -58,8 +59,8 @@ BalancedStatusWithHeight CheckBalanced(
   int height = max(left_result.height, right_result.height) + 1;
   return {is_balanced, height};
 }
-// @exclude
-
+// @pg_end
+// @pg_ignore
 int MAIN_FUNC(int argc, char* argv[]) {
   //  balanced binary tree test
   //      3
