@@ -1,0 +1,6 @@
+{
+  "slug": "snake-string",
+  "title": "Write a string sinusoidally",
+  "hint": "Try concrete examples, and look fror periodicity.",
+  "problem": "We illustrate what it means to write a string in sinusoidal fashion by means of an example. The string \"Hello World!\" written in sinusoidal fashion is <img src=\"http:\/\/raw.githubusercontent.com\/bradstewart\/epi-online\/master\/static\/posts\/snake-string.png\"\/> <p> Define the snakestring S to be the left-right-top-to-down sequence in which characters appear when S is written in sinusoidal fashion. For example, the snakestring string for \"Hello World!\" is \"e lHloWrdlo!\"."
+}

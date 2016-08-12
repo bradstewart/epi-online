@@ -1,0 +1,6 @@
+{
+  "slug": "palindrome-number",
+  "title": "Check if a decimal integer is a palindrome",
+  "hint": "It's easy to come up with a simple expression that extracts the least significant digit. Can you find a simple expression for the most significant digit?",
+  "problem": "A palindromic string is one which reads the same forwards and backwards, e.g., \"redivider\". <p>In this problem, you are to write a program which determines if the decimal representation of an integer is a palindromic string."
+}

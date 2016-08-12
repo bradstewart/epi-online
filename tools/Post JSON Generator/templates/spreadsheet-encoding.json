@@ -1,0 +1,6 @@
+{
+  "slug": "spreadsheet-encoding",
+  "title": "Compute the spreadsheet column encoding",
+  "hint": "There are 26 characters in [A, Z], and each can be mapped to an integer",
+  "problem": "Spreadsheets often use an alphabetical encoding of the successive columns. Specifically, columns are identified by <b>A</b>, <b>B</b>, ... , <b>Y</b>, <b>Z</b>, <b>AA</b>, <b>AB</b>, ... , <b>ZZ</b>, <b>AAA</b>, <b>AAB</b>, etc. <p>Implement a function that converts a spreadsheet column id to the corresponding integer, with <b>A</b> corresponding to 1. <p>For example, you should return 4 for <b>D</b>, 27 for <b>AA</b>, 702 for <b>ZZ</b>, etc."
+}

@@ -1,0 +1,6 @@
+{
+  "slug": "sudoku-solve",
+  "title": "Implement a Sudoku solver",
+  "hint": "Apply the constraints to speed-up a brute-force algorithm.",
+  "problem": "Sudoku is a popular logic-based combinatorial number placement puzzle. The objective is to fill a 9 x 9 grid with digits subject to the constraint that each column, each row, and each of the nine 3 x 3 sub-grids that compose the grid contains unique integers in [1, 9]. The grid is initialized with a partial assignment as shown in the following figure <p> <img src=\"http:\/\/raw.githubusercontent.com\/bradstewart\/epi-online\/master\/static\/posts\/sudoku-1.png\"\/> <p> A complete solution is shown here <p> <img src=\"http:\/\/raw.githubusercontent.com\/bradstewart\/epi-online\/master\/static\/posts\/sudoku-2.png\"\/> <p>Implement a Sudoku solver. The program takes 2D grid of integers, where zero means an undefined cell and numbers greater than zero represents cells with known value. The task is to eliminate all zeros in respect of mentioned constraints."
+}

@@ -1,0 +1,6 @@
+{
+  "slug": "matrix-search",
+  "title": "Search in a 2D sorted array",
+  "hint": "Can you eliminate a row or a column per comparison?",
+  "problem": "Call a 2D array sorted if its rows and its columns are nondecreasing. Design an algorithm that takes a 2D sorted array and a number and checks whether that number appears in the array. Try to archive a linear complexity over m + n, where m is the height and n is the width of the matrix. <p> <img src=\"http:\/\/raw.githubusercontent.com\/bradstewart\/epi-online\/master\/static\/posts\/matrix-search.png\"\/> <p> <i>A 2D sorted array.</i>"
+}

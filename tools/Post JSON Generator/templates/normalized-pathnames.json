@@ -1,0 +1,6 @@
+{
+  "slug": "normalized-pathnames",
+  "title": "Normalize pathnames",
+  "hint": "Trace the cases. How should . and .. be handled? Watch for invalid paths.",
+  "problem": "A file or directory can be specified via a string called the pathname. This string may specify an absolute path, starting from the root, e.g., <pre>/usr/bin/gcc</pre>or a path relative to the current working directory, e.g., <pre>scripts/awkscripts</pre> <p> Write a program which takes a pathname, and returns the shortest equivalent pathname. The function throws an <b>IllegalArgumentException</b> if the taken path is invalid. Assume individual directories and files have names that use only alphanumeric characters. Subdirectory names may be combined using forward slashes (/), the current directory (.) and parent directory (..). "
+}

@@ -1,0 +1,6 @@
+{
+  "slug": "is-binary-tree-balanced",
+  "title": "Test if a binary tree is balanced.",
+  "hint": "Think of a classic binary tree algorithm.",
+  "problem": "A binary tree is said to be balanced if for each node in the tree,   the difference in the height of its left and right subtrees is at most one.   A perfect binary tree is balanced, as is a complete binary tree.   A balanced binary tree does not have to be perfect or complete---see the   figure for an example.   <p>   Write a program that takes as input the root of a binary tree   and checks whether the tree is balanced.   <p>   The binary tree class is<pre>   class BinaryTreeNode<T> {       public T data;       public BinaryTreeNode<T> left, right;   }   public BinaryTreeNode(T data) { this.data = data; }   public BinaryTreeNode(T data, BinaryTreeNode<T> left,                          BinaryTreeNode<T> right) {     this.data = data;     this.left = left;     this.right = right;   }<\/pre><p>   <img src=\"\/static/posts/binary-tree.png\"><\/img>"
+}

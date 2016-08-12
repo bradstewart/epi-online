@@ -1,0 +1,6 @@
+{
+  "slug": "square-root-int",
+  "title": "Compute the integer square root",
+  "hint": "Look out for a corner-case.",
+  "problem": "Write a program which takes a non-negative integer and returns the largest integer whose square is less than or equal to the given integer."
+}
