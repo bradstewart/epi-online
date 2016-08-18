@@ -5,11 +5,13 @@ import sys
 import os
 import json
 import re
+import copy
 
 INSERT_ME_TAG = "//INSERT_ME\n"
 
-tag_re = re.compile('\/\/\s*@')
-
+tag_re = re.compile('//\s*@')
+number_re = re.compile(':\\d+$')
+param_char = ':'
 
 class Token:
     TEXT = 0
@@ -20,34 +22,43 @@ class Token:
     INCLUDE = 5
     SKELETON = 6
     IMPL = 7
+    REPLACE = 8
 
 
 class BaseFilter:
-    def __init__(self, ctx: dict, targets):
+    def __init__(self, ctx: dict, targets, lines_to_process):
         self.ctx = ctx
         self.targets = targets
+        self.lines_left = lines_to_process if lines_to_process is not None else -1
         for t in self.targets:
             ctx.setdefault(t, "")
 
     def process(self, line):
+        assert self.lines_left != 0
+        if self.lines_left > 0:
+            self.lines_left -= 1
+
         if not tag_re.match(line):
             for t in self.targets:
                 self.ctx[t] += line
 
-    def get_ignore(self):
-        return get_filter(self.ctx, None)
+    def marked_for_deletion(self):
+        return self.lines_left == 0
+
+    def get_ignore(self, lines_to_process):
+        return get_filter(self.ctx, None, lines_to_process)
 
 
 class SkeletonFilter(BaseFilter):
-    def __init__(self, ctx, insert_marker):
-        BaseFilter.__init__(self, ctx, ["skeleton"])
+    def __init__(self, ctx, lines_to_process, insert_marker):
+        BaseFilter.__init__(self, ctx, ["skeleton"], lines_to_process)
         self.marker_inserted = not insert_marker
 
-    def get_ignore(self):
+    def get_ignore(self, lines_to_process):
         if not self.marker_inserted:
             self.process('    // Your solution here...\n')
             self.marker_inserted = True
-        return BaseFilter.get_ignore(self)
+        return BaseFilter.get_ignore(self, lines_to_process)
 
 
 class LineStream:
@@ -75,71 +86,86 @@ def open_or_exit(filename: str, mode='r'):
         sys.exit("File " + filename + " was not found")
 
 
-def get_filter(ctx, tok, last=None):
+def get_filter(ctx, tok, param=None, last=None):
     if tok is None:
-        return BaseFilter(ctx, [])
+        return BaseFilter(ctx, [], param)
 
     if tok == Token.HARNESS:
-        return BaseFilter(ctx, ["harness"])
+        return BaseFilter(ctx, ["harness"], param)
     if tok == Token.HEADER:
-        return BaseFilter(ctx, ["harness", "header"])
+        return BaseFilter(ctx, ["harness", "header"], param)
     if tok == Token.SKELETON:
         get_filter(ctx, Token.HARNESS).process(INSERT_ME_TAG)
-        return SkeletonFilter(ctx, True)
+        return SkeletonFilter(ctx, param, True)
     if tok == Token.IMPL:
+        last = copy.copy(last)
+        last.lines_left = param
         return last
-    return BaseFilter(ctx, [])
+    return BaseFilter(ctx, [], param)
+
+
+def get_rep_count_from_token(token: str):
+    m = re.search(number_re, token)
+    return int(m.group()[1:]) if m is not None else -1
+
+
+def get_param_from_token(line: str, prefix: str):
+    prefix += param_char
+    pos = line.index(prefix) + len(prefix)
+    assert (pos < len(line)), 'Missing required param in ' + prefix[:-1]
+
+    return line[pos:]
 
 
 def get_token(line: str, config):
     line = line.lstrip(' \t/').rstrip()
-    if line == '@pg_header':
-        return Token.HEADER
-    if line == '@pg_harness':
-        return Token.HARNESS
-    if line == '@pg_ignore':
-        return Token.IGNORE
-    if line == '@pg_end':
-        return Token.END
+    if line.startswith('@pg_header'):
+        return Token.HEADER, get_rep_count_from_token(line)
+    if line.startswith('@pg_harness'):
+        return Token.HARNESS, get_rep_count_from_token(line)
+    if line.startswith('@pg_ignore'):
+        return Token.IGNORE, get_rep_count_from_token(line)
+    if line.startswith('@pg_end'):
+        return Token.END, None
     if line.startswith('@pg_include'):
-        return Token.INCLUDE
-    if line == '@pg_skeleton':
-        return Token.SKELETON
-    if line == '@pg_impl':
-        return Token.IMPL if config.keep_impl else Token.IGNORE
+        return Token.INCLUDE, get_param_from_token(line, '@pg_include')
+    if line.startswith('@pg_skeleton'):
+        return Token.SKELETON, get_rep_count_from_token(line)
+    if line.startswith('@pg_impl'):
+        return Token.IMPL if config.keep_impl else Token.IGNORE, get_rep_count_from_token(line)
+    if line.startswith('@pg_replace'):
+        return Token.REPLACE, get_param_from_token(line, '@pg_replace') + '\n'
 
-    return Token.TEXT
-
-
-def process_include(line: str, prefix='pg_include'):
-    pos = line.index(prefix) + len(prefix)
-    if pos >= len(line):
-        sys.exit("Missing argument in @pg_include")
-    return line[pos:-1].strip()
+    return Token.TEXT, None
 
 
 def process(filename: str, config):
     base_folder = os.path.dirname(filename)
     ctx = dict()
     ctx['filename'] = os.path.basename(filename)
-    filter_stack = [get_filter(ctx, None)]
+    filter_stack = [get_filter(ctx, Token.HARNESS)]
     stream = LineStream()
     stream.insert_file(filename)
 
     for line in stream:
-        tok = get_token(line, config)
+        tok, param = get_token(line, config)
         if tok == Token.TEXT:
             filter_stack[-1].process(line)
         elif tok == Token.INCLUDE:
-            stream.insert_file(os.path.join(base_folder, process_include(line)))
+            stream.insert_file(os.path.join(base_folder, param))
         elif tok == Token.END:
-            if len(filter_stack) == 1:
-                sys.exit('pg_end token found with no open tag')
+            assert (len(filter_stack) > 1), '@pg_end token found with no open tag'
             filter_stack.pop()
         elif tok == Token.IGNORE:
-            filter_stack.append(filter_stack[-1].get_ignore())
+            filter_stack.append(filter_stack[-1].get_ignore(param))
+        elif tok == Token.REPLACE:
+            filter_stack[-1].process(param)
+            filter_stack.append(get_filter(ctx, None, 1))
         else:
-            filter_stack.append(get_filter(ctx, tok, filter_stack[-1]))
+            filter_stack.append(get_filter(ctx, tok, param, filter_stack[-1]))
+
+        while len(filter_stack) > 0 and filter_stack[-1].marked_for_deletion():
+            filter_stack.pop()
 
     return ctx
 
@@ -149,7 +175,8 @@ parser.add_argument('--cpp', help='cpp file to process')
 parser.add_argument('--java', help='java file to process')
 parser.add_argument('--template', required=True, help='JSON template file')
 parser.add_argument('--output', required=True, help='JSON output file')
-parser.add_argument('-keep-impl', dest='keep_impl', help='Keep implementation (for testing purposes)', action='store_true')
+parser.add_argument('-keep-impl', dest='keep_impl',
+                    help='Keep implementation (for testing purposes)', action='store_true')
 parser.set_defaults(keep_impl=False)
 
 config = parser.parse_args()

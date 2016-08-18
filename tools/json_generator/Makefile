@@ -1,4 +1,4 @@
-#Set up EPICODE_ROOT enviroment variable so that it points to the directory where https://github.com/adnanaziz/epicode is located
+#Set up EPICODE_ROOT environment variable so that it points to the directory where https://github.com/adnanaziz/epicode is located
 #Run `make keep_impl=y` to generate debug versions of JSON that can be directly submitted to the server using `submit.py`
 GENERATOR := generator.py
 PYTHON    := python3
