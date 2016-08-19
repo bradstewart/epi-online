@@ -150,7 +150,13 @@ def glue_and_submit(lang, content, verbose):
         print('The "filename" section is missing from the JSON["code"]["' + lang_name + '"], skipping...')
         return
 
-    code = re.sub(INSERT_ME_TAG, content['skeleton'], content['harness'])
+    code = ''
+    if 'package' in content:
+        code += content['package']
+    if 'imports' in content:
+        code += content['imports']
+
+    code += re.sub(INSERT_ME_TAG, content['skeleton'], content['harness'])
     submit(lang, code, content['filename'], verbose)
 
 

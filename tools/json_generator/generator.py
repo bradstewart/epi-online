@@ -9,9 +9,11 @@ import copy
 
 INSERT_ME_TAG = "//INSERT_ME\n"
 
-tag_re = re.compile('//\s*@')
+tag_re = re.compile('\s*//\s*@')  # matches //@ lines
+min_filter_re = re.compile('^\s*(//|$)')  # matches empty lines and comment lines
 number_re = re.compile(':\\d+$')
 param_char = ':'
+
 
 class Token:
     TEXT = 0
@@ -23,22 +25,33 @@ class Token:
     SKELETON = 6
     IMPL = 7
     REPLACE = 8
+    IMPORT = 9
+    PACKAGE = 10
+
+
+def tag_lfilter(line):
+    return not tag_re.match(line)
+
+
+def minimizing_lfilter(line):
+    return tag_lfilter(line) and not min_filter_re.match(line)
 
 
 class BaseFilter:
-    def __init__(self, ctx: dict, targets, lines_to_process):
+    def __init__(self, ctx: dict, targets, lines_to_process, line_filter):
         self.ctx = ctx
         self.targets = targets
         self.lines_left = lines_to_process if lines_to_process is not None else -1
+        self.lfilter = line_filter
         for t in self.targets:
             ctx.setdefault(t, "")
 
-    def process(self, line):
+    def process(self, line, override_filter=False):
         assert self.lines_left != 0
         if self.lines_left > 0:
             self.lines_left -= 1
 
-        if not tag_re.match(line):
+        if self.lfilter(line) or override_filter:
             for t in self.targets:
                 self.ctx[t] += line
 
@@ -51,12 +64,12 @@ class BaseFilter:
 
 class SkeletonFilter(BaseFilter):
     def __init__(self, ctx, lines_to_process, insert_marker):
-        BaseFilter.__init__(self, ctx, ["skeleton"], lines_to_process)
+        BaseFilter.__init__(self, ctx, ["skeleton"], lines_to_process, tag_lfilter)
         self.marker_inserted = not insert_marker
 
     def get_ignore(self, lines_to_process):
         if not self.marker_inserted:
-            self.process('    // Your solution here...\n')
+            self.process('    // Your solution here...\n', True)
             self.marker_inserted = True
         return BaseFilter.get_ignore(self, lines_to_process)
 
@@ -88,20 +101,25 @@ def open_or_exit(filename: str, mode='r'):
 
 def get_filter(ctx, tok, param=None, last=None):
     if tok is None:
-        return BaseFilter(ctx, [], param)
+        return BaseFilter(ctx, [], param, tag_lfilter)
 
     if tok == Token.HARNESS:
-        return BaseFilter(ctx, ["harness"], param)
+        return BaseFilter(ctx, ["harness"], param, minimizing_lfilter)
     if tok == Token.HEADER:
-        return BaseFilter(ctx, ["harness", "header"], param)
+        return BaseFilter(ctx, ["harness", "header"], param, tag_lfilter)
+    if tok == Token.PACKAGE:
+        return BaseFilter(ctx, ["package"], 1, tag_lfilter)
+    if tok == Token.IMPORT:
+        return BaseFilter(ctx, ["imports"], param, minimizing_lfilter)
     if tok == Token.SKELETON:
-        get_filter(ctx, Token.HARNESS).process(INSERT_ME_TAG)
+        get_filter(ctx, Token.HARNESS).process(INSERT_ME_TAG, True)
         return SkeletonFilter(ctx, param, True)
     if tok == Token.IMPL:
         last = copy.copy(last)
         last.lines_left = param
+        last.lfilter = minimizing_lfilter
         return last
-    return BaseFilter(ctx, [], param)
+    return BaseFilter(ctx, [], param, tag_lfilter)
 
 
 def get_rep_count_from_token(token: str):
@@ -123,27 +141,38 @@ def get_token(line: str, config):
         return Token.HEADER, get_rep_count_from_token(line)
     if line.startswith('@pg_harness'):
         return Token.HARNESS, get_rep_count_from_token(line)
-    if line.startswith('@pg_ignore'):
-        return Token.IGNORE, get_rep_count_from_token(line)
-    if line.startswith('@pg_end'):
-        return Token.END, None
-    if line.startswith('@pg_include'):
-        return Token.INCLUDE, get_param_from_token(line, '@pg_include')
     if line.startswith('@pg_skeleton'):
         return Token.SKELETON, get_rep_count_from_token(line)
     if line.startswith('@pg_impl'):
         return Token.IMPL if config.keep_impl else Token.IGNORE, get_rep_count_from_token(line)
+    if line.startswith('@pg_ignore'):
+        return Token.IGNORE, get_rep_count_from_token(line)
+    if line.startswith('@pg_import'):
+        return Token.IMPORT, get_rep_count_from_token(line)
+    if line.startswith('@pg_package'):
+        return Token.PACKAGE, None
+
+    if line.startswith('@pg_end'):
+        return Token.END, None
+    if line.startswith('@pg_include'):
+        return Token.INCLUDE, get_param_from_token(line, '@pg_include')
     if line.startswith('@pg_replace'):
         return Token.REPLACE, get_param_from_token(line, '@pg_replace') + '\n'
 
     return Token.TEXT, None
 
 
-def process(filename: str, config):
+def push_package_filter_on_start(stack, ctx):
+    stack.append(get_filter(ctx, Token.PACKAGE))
+
+
+def process(filename: str, config, custom_stack_init=None):
     base_folder = os.path.dirname(filename)
     ctx = dict()
     ctx['filename'] = os.path.basename(filename)
     filter_stack = [get_filter(ctx, Token.HARNESS)]
+    if custom_stack_init is not None:
+        custom_stack_init(filter_stack, ctx)
     stream = LineStream()
     stream.insert_file(filename)
 
@@ -190,7 +219,7 @@ if config.java is not None:
     if "java" in code:
         print("Warning: rewriting java harness")
     config.seen_skeleton = False
-    code["java"] = process(config.java, config)
+    code["java"] = process(config.java, config, push_package_filter_on_start)
 
 template = json.load(open_or_exit(config.template))
 template["code"] = code
