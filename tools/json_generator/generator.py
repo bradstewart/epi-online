@@ -27,6 +27,7 @@ class Token:
     REPLACE = 8
     IMPORT = 9
     PACKAGE = 10
+    HEADERONLY = 11
 
 
 def tag_lfilter(line):
@@ -107,6 +108,8 @@ def get_filter(ctx, tok, param=None, last=None):
         return BaseFilter(ctx, ["harness"], param, minimizing_lfilter)
     if tok == Token.HEADER:
         return BaseFilter(ctx, ["harness", "header"], param, tag_lfilter)
+    if tok == Token.HEADERONLY:
+        return BaseFilter(ctx, ["header"], param, tag_lfilter)
     if tok == Token.PACKAGE:
         return BaseFilter(ctx, ["package"], 1, tag_lfilter)
     if tok == Token.IMPORT:
@@ -139,6 +142,8 @@ def get_token(line: str, config):
     line = line.lstrip(' \t/').rstrip()
     if line.startswith('@pg_header'):
         return Token.HEADER, get_rep_count_from_token(line)
+    if line.startswith('@pg_only_header'):
+        return Token.HEADERONLY, get_rep_count_from_token(line)
     if line.startswith('@pg_harness'):
         return Token.HARNESS, get_rep_count_from_token(line)
     if line.startswith('@pg_skeleton'):
@@ -223,4 +228,4 @@ if config.java is not None:
 
 template = json.load(open_or_exit(config.template))
 template["code"] = code
-json.dump(template, open_or_exit(config.output, mode='w'))
+json.dump(template, open_or_exit(config.output, mode='w'), sort_keys=True)
