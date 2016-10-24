@@ -1,5 +1,6 @@
 var path = require('path')
 var express = require('express')
+var chokidar = require('chokidar')
 var webpack = require('webpack')
 var config = require('../config')
 var proxyMiddleware = require('http-proxy-middleware')
@@ -55,6 +56,14 @@ app.use(hotMiddleware)
 // serve pure static assets
 var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
+
+// watch static assets for changes, and hook into webpack's hot reloader
+// to force the client to reload the page.
+chokidar
+  .watch('./static')
+  .on('change', function (file, stat) {
+    hotMiddleware.publish({ action: 'reload' })
+  })
 
 module.exports = app.listen(port, function (err) {
   if (err) {
