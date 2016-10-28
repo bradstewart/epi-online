@@ -28,18 +28,6 @@
                 :options="fontSizes"
                 :default="fontSize">
               </ui-select>
-              <!-- <ui-icon-button
-                type="clear" color="black" icon="format_size"
-                tooltip="Font Size" tooltip-position="top center"
-                has-dropdown-menu show-menu-icons
-                :menu-options="menuOptions" dropdown-position="bottom right"
-              ></ui-icon-button>
-
-              <ui-icon-button
-                type="clear" color="black" icon="code" has-dropdown-menu
-                tooltip="Language" tooltip-position="top center"
-                :menu-options="editorActions" dropdown-position="bottom right"
-              ></ui-icon-button> -->
             </div>
             <ace-editor
               :mode="language.value"
@@ -64,29 +52,52 @@
 
     <div class="page-footer">
       <div class="pull-right">
-
-
         <div class="actions">
+          <ui-button
+            v-popover.left="post.hint"
+            type="flat"
+            icon-left
+            icon="help"
+            color="default"
+            text="Hint">
+          </ui-button>
+          <ui-button
+            @click.prevent="isConfirmingReset = true"
+            type="flat"
+            icon-left
+            icon="autorenew"
+            color="default"
+            text="Reset">
+          </ui-button>
+          <ui-button
+            @click.prevent="submit"
+            :loading="isSubmitting"
+            raised
+            icon-left
+            icon="send"
+            color="primary"
+            text="Submit">
+          </ui-button>
+        </div>
 
-        <!-- <a @click.prevent="submit" class="btn btn-primary">Submit</a> -->
-        <ui-button data-toggle="button" v-popover.left="post.hint" flat icon-left icon="help" color="default">
-          HINT
-        </ui-button>
+        <ui-confirm
+          :show.sync="isConfirmingReset"
+          header="Reset Problem"
+          close-on-confirm
+          @confirmed="reset">
+          All changes will be lost. Are you sure?
+        </ui-confirm>
 
-        <ui-button @click.prevent="submit" raised icon-left icon="send" color="primary">
-          Submit
-        </ui-button>
-          </div>
-          <modal :show.sync="isSubmitting">
-            <p class="lead" style="margin: 0; text-align: center;">
-              Submitting...
-            </p>
-            <load-bar></load-bar>
-          </modal>
-
-          <!-- <ui-popover :trigger="$els.hint" dropdown-position="left middle">{{ post.hint }}</ui-popover> -->
+        <ui-modal
+          :show.sync="isSubmitting"
+          header="Submitting..."
+          type="small"
+          hide-footer
+          :dismissible="false"
+          :show-close-button="false">
+          <ui-preloader show></ui-preloader>
+        </ui-modal>
       </div>
-
     </div>
   </div>
 </template>
@@ -101,6 +112,7 @@
 
     data () {
       return {
+        isConfirmingReset: false,
         isSubmitting: false,
         showHint: false,
         language: LANGUAGES[0],
@@ -132,11 +144,11 @@
       },
 
       reset () {
-        if (confirm('Reset?')) {
-          this.fetchPost(this.$route.params.id).then((post) => {
-            this.post = post
-          })
-        }
+        this.isConfirmingReset = false
+
+        this.fetchPost(this.$route.params.id).then((post) => {
+          this.post = post
+        })
       },
 
       submit () {
