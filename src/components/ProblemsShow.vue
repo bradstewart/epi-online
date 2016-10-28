@@ -30,14 +30,14 @@
               </ui-select>
             </div>
             <ace-editor
-              :mode="language.value"
-              :font-size="fontSize.value"
-              :content.sync="post.skeleton">
+              :mode="language.aceEditorId"
+              :font-size="fontSize"
+              :content.sync="code.skeleton">
             </ace-editor>
           </panel>
         </div>
 
-        <div v-el:solution-results class="split" >
+        <div v-el:solution-results class="split">
           <panel title="Output" icon="message">
             <template v-if="output.length">
               <log-output :buffer="output"></log-output>
@@ -98,6 +98,7 @@
           <ui-preloader show></ui-preloader>
         </ui-modal>
       </div>
+
     </div>
   </div>
 </template>
@@ -105,18 +106,17 @@
 <script>
   import Split from 'split.js'
   import _ from 'lodash'
-
-  import { LANGUAGES, EDITOR_FONT_SIZES } from 'src/constants'
+  import * as languages from 'src/languages'
+  import { fontSizes } from 'src/editorOptions'
 
   export default {
-
     data () {
       return {
         isConfirmingReset: false,
         isSubmitting: false,
         showHint: false,
-        language: LANGUAGES[0],
-        fontSize: EDITOR_FONT_SIZES[0],
+        language: languages.Java,
+        fontSize: fontSizes[0],
         post: {},
         output: [],
       }
@@ -124,10 +124,13 @@
 
     computed: {
       languages () {
-        return LANGUAGES
+        return _.values(languages)
       },
       fontSizes () {
-        return EDITOR_FONT_SIZES
+        return fontSizes
+      },
+      code () {
+        return _.get(this.post, ['code', this.language.value], {})
       },
     },
 
@@ -160,8 +163,10 @@
           .post({
             url: 'http://epijudge.ddns.net:3000/compile',
             data: JSON.stringify({
+              filename: this.code.filename,
               language: this.language.compileBoxId,
-              code: this.post.skeleton,
+              code: this.language.assemble(this.code),
+              // TODO: Do we need this/what should it's value be?
               stdIn: 'TODO',
             }),
             method: 'POST',
@@ -237,12 +242,6 @@
         next({
           post: this.fetchPost(id)
         })
-
-        // Left over from collapsing menus in Materialize.
-        // Just keeping this here in case we go back to that,
-        // because I'll never remember this.
-        //
-        // this.$dispatch('open')
       },
     },
   }
@@ -261,7 +260,6 @@
 
 <style lang="less">
   @import "~assets/less/variables";
-
 
   .ui-toolbar.ui-toolbar-sm {
     .ui-icon-button {
