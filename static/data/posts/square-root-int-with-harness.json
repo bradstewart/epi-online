@@ -1,9 +1,0 @@
-{
-  "slug": "square-root-int",
-  "title": "Compute the integer square root",
-  "hint": "Look out for a corner-case.",
-  "problem": "Write a program which takes a nonnegative integer and returns the largest integer whose square is less than or equal to the given integer.",
-  "skeleton": "public static int squareRoot(int k) {\r\n    \/\/ Your solution here...\r\n}",
-  "test": "check(0, 0);\r\ncheck(1, 1);\r\ncheck(2, 1);\r\ncheck(3, 1);\r\ncheck(4, 2);\r\ncheck(8, 2);\r\ncheck(9, 3);\r\ncheck(64, 8);\r\ncheck(121, 11);\r\ncheck(300, 17);\r\ncheck(2147483647, 46340);",
-  "harness": "import java.util.Random;\r\n\r\npublic class SquareRootInt {\r\n  \/\/ @include\r\n  FILL_ME_CODE\r\n  \/\/ @exclude\r\n\r\n  private static void simpleTest() {\r\n    assert(squareRoot(0) == 0);\r\n    assert(squareRoot(1) == 1);\r\n    assert(squareRoot(2) == 1);\r\n    assert(squareRoot(3) == 1);\r\n    assert(squareRoot(4) == 2);\r\n    assert(squareRoot(7) == 2);\r\n    assert(squareRoot(121) == 11);\r\n    assert(squareRoot(64) == 8);\r\n    assert(squareRoot(300) == 17);\r\n    assert(squareRoot(Integer.MAX_VALUE) == 46340);\r\n  }\r\n\r\n  public static void main(String[] args) {\r\n    simpleTest();\r\n    int x;\r\n    if (args.length == 1) {\r\n      x = Integer.parseInt(args[0]);\r\n    } else {\r\n      Random r = new Random();\r\n      for (int times = 0; times < 100000; ++times) {\r\n        x = r.nextInt(Integer.MAX_VALUE);\r\n        int result[] = new int[2];\r\n        System.out.println(\"x is \" + x);\r\n        System.out.println((result[0] = squareRoot(x)) + \" \"\r\n                           + (result[1] = (int)Math.sqrt(x)));\r\n        assert(result[0] == result[1]);\r\n      }\r\n    }\r\n  }\r\n}"
-}
