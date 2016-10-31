@@ -39,6 +39,33 @@
 
         <div v-el:solution-results class="split">
           <panel title="Output" icon="message">
+
+              <div v-if="results.passed.length">
+                <template v-if="results.passed.length === results.count">
+                  <ui-icon icon="done_all" class="text-success"></ui-icon> All tests passed!
+                </template>
+                <ul v-else v-for="result in results.passed" class="list-unstyled">
+                  <li>
+                    <ui-icon icon="done" class="text-success ui-icon-sm"></ui-icon> {{ result.description }}
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="results.failed">
+                <ul v-else v-for="result in results.failed" class="list-unstyled">
+                  <li>
+                    <h6><ui-icon icon="clear" class="text-danger ui-icon-sm"></ui-icon> {{ result.description }}</h6>
+                    <div>
+                      Expected: <code v-text="result.expected_output"></code>
+                      Received: <code v-text="result.user_output"></code>
+                      <!-- <pre>
+                        {{ result | json }}
+                      </pre> -->
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
             <template v-if="output.length">
               <log-output :buffer="output"></log-output>
             </template>
@@ -109,6 +136,8 @@
   import * as languages from 'src/languages'
   import { fontSizes } from 'src/editorOptions'
 
+  const EPI_TESTS = '###EPI_TESTS###'
+
   export default {
     data () {
       return {
@@ -119,6 +148,12 @@
         fontSize: fontSizes[0],
         post: {},
         output: [],
+        results: {
+          count: 0,
+          passed: [],
+          failed: [],
+          error: null,
+        },
       }
     },
 
@@ -142,8 +177,8 @@
       fetchPost (id) {
         return this.$http
           .get({ url: `/static/data/posts/${id}.json`})
-          .then((res) => res.data)
-          .catch((err) => console.error(err))
+          .then((response) => response.data)
+          .catch((error) => console.error(error))
       },
 
       reset () {
@@ -154,13 +189,21 @@
         })
       },
 
+      // "ok" - obviously
+      // "failed" - function produced wrong result
+      // "segmentation_fault" - SEGV signal caught (only C++)
+      // "erroneous_arithmetic_operation" FPE signal caught (only C++)
+      // "runtime_error" any other signal caught (only C++, unlikely to appear)
+      // "unhandled_exception" any normal exception caught (C++ and Java)
+      // "null_pointer_exception" (Java only)
+
       submit () {
         this.isSubmitting = true
-        this.log(`<strong>Submission started @ ${new Date().toISOString()}</strong><br />`)
 
         return this
           .$http
           .post({
+            method: 'POST',
             url: 'http://epijudge.ddns.net:3000/compile',
             data: JSON.stringify({
               filename: this.code.filename,
@@ -169,53 +212,37 @@
               // TODO: Do we need this/what should it's value be?
               stdIn: 'TODO',
             }),
-            method: 'POST',
           })
           .then((response) => {
-            this._handleResponse(response)
+            this._handleResponse(response.data)
+            console.log(response)
             this.isSubmitting = false
           })
-          .catch((err) => {
+          .catch((error) => {
+            console.error(error)
             this.isSubmitting = false
-            console.error(err)
           })
-
-        // Add some "async"
-        // setTimeout(() => {
-        //   return this.$http
-        //     .get({ url: `/static/data/result.json`})
-        //     .then((response) => {
-        //       this._handleResponse(response)
-        //       this.isSubmitting = false
-        //     })
-        //     .catch((err) => {
-        //       this.isSubmitting = false
-        //       console.error(err)
-        //     })
-        //   }, Math.round(Math.random()*1500) + 500)
       },
 
-      _handleResponse (response) {
-        let { output, errors, test } = response.data
+      _handleResponse ({ output, errors }) {
+        if (output.startsWith(EPI_TESTS)) {
+          const result = JSON.parse(output.replace(EPI_TESTS, '').trim())
+          const grouped = _.groupBy(result.tests, (test) => {
+            return test.status === 'ok'
+              ? 'passed'
+              : 'failed'
+          })
 
-        this.log(output)
-
-        if (errors) return this.log(errors)
-
-        let passed = 0
-
-        tests.forEach((test) => {
-          if (test.status === 'ok') passed++
-
-          // TODO: Format failures differently (display inputs).
-          // TODO: Display check mark when all passing.
-
-          this.log(
-            `    ${test.status}\t${_.padEnd(test.description, 25)}\t--\tExpected: ${test.expected_output} \t Actual: ${test.user_output}`
-          )
-        })
-
-        this.log(`<strong>Passed ${passed}/${tests.length}</strong><br /><br />`)
+          this.results = {
+            count: result.tests.length,
+            passed: grouped.passed || [],
+            failed: grouped.failed || [],
+          }
+        } else {
+          // TODO
+          this.log(output)
+          this.log(errors)
+        }
       },
 
       _initDraggablePanels () {
@@ -240,7 +267,7 @@
     route: {
       data ({ next, to: { params: { id }}}) {
         next({
-          post: this.fetchPost(id)
+          post: this.fetchPost(id),
         })
       },
     },
@@ -261,6 +288,11 @@
 <style lang="less">
   @import "~assets/less/variables";
 
+  .ui-icon-sm {
+    font-size: 16px;
+    // vertical-align: text-top;;
+  }
+
   .ui-toolbar.ui-toolbar-sm {
     .ui-icon-button {
       width: 32px;
@@ -271,6 +303,7 @@
       }
     }
   }
+
   .actions {
     a,
     div.ui-select {
