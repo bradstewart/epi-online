@@ -47,12 +47,12 @@
             </div>
 
             <div v-if="results.passed && results.passed.length">
-              <div v-if="results.passed.length === results.count" class="text-success">
-                <ui-icon icon="done_all" class="ui-icon-sm"></ui-icon>
-                <span class="result-status">Success!</span>
-                <!-- <div>
-                  <ui-button type="flat">ToDo Next</ui-button>
-                </div> -->
+              <div v-if="results.passed.length === results.count">
+                <ui-icon icon="done_all" class="ui-icon-sm text-success"></ui-icon>
+                <span class="result-status text-success">Success!</span>
+                <p>
+                  You have completed this problem. Move on to the next one!
+                </p>
               </div>
               <ul v-else class="list-unstyled">
                 <li v-for="result in results.passed" >
