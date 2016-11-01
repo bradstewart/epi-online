@@ -40,35 +40,52 @@
         <div v-el:solution-results class="split">
           <panel title="Output" icon="message">
 
-              <div v-if="results.passed.length">
-                <template v-if="results.passed.length === results.count">
-                  <ui-icon icon="done_all" class="text-success"></ui-icon> All tests passed!
-                </template>
-                <ul v-else v-for="result in results.passed" class="list-unstyled">
-                  <li>
-                    <ui-icon icon="done" class="text-success ui-icon-sm"></ui-icon> {{ result.description }}
-                  </li>
-                </ul>
-              </div>
+            <div v-if="results.error" class="text-danger">
+              <ui-icon icon="block" class="ui-icon-sm"></ui-icon>
+              <span class="result-status" v-text="results.error.message"></span>
+              <pre  style="margin-top: 12px;">{{ results.error.details }}</pre>
+            </div>
 
-              <div v-if="results.failed">
-                <ul v-else v-for="result in results.failed" class="list-unstyled">
-                  <li>
-                    <h6><ui-icon icon="clear" class="text-danger ui-icon-sm"></ui-icon> {{ result.description }}</h6>
+            <div v-if="results.passed && results.passed.length">
+              <div v-if="results.passed.length === results.count" class="text-success">
+                <ui-icon icon="done_all" class="ui-icon-sm"></ui-icon>
+                <span class="result-status">Success!</span>
+                <!-- <div>
+                  <ui-button type="flat">ToDo Next</ui-button>
+                </div> -->
+              </div>
+              <ul v-else class="list-unstyled">
+                <li v-for="result in results.passed" >
+                  <ui-icon icon="done" class="text-success ui-icon-sm"></ui-icon>
+                  <span class="test-status text-success">
+                    {{ result.description }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div v-if="results.failed">
+              <ul class="list-unstyled">
+                <li v-for="result in results.failed">
+                  <ui-icon icon="clear" class="text-danger ui-icon-sm"></ui-icon>
+                  <span class="test-status text-danger">
+                    {{ result.description }}
+                  </span>
+                  <div style="margin-left: 26px;">
+                    <div>
+                      Input: <code v-text="result.input | json"></code>
+                    </div>
                     <div>
                       Expected: <code v-text="result.expected_output"></code>
-                      Received: <code v-text="result.user_output"></code>
-                      <!-- <pre>
-                        {{ result | json }}
-                      </pre> -->
                     </div>
-                  </li>
-                </ul>
-              </div>
+                    <div>
+                      Actual: <code v-text="result.user_output"></code>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
 
-            <template v-if="output.length">
-              <log-output :buffer="output"></log-output>
-            </template>
             <span v-else>
               Your output will appear here...
             </span>
@@ -148,12 +165,7 @@
         fontSize: fontSizes[0],
         post: {},
         output: [],
-        results: {
-          count: 0,
-          passed: [],
-          failed: [],
-          error: null,
-        },
+        results: {},
       }
     },
 
@@ -186,7 +198,17 @@
 
         this.fetchPost(this.$route.params.id).then((post) => {
           this.post = post
+          this._clearResults()
         })
+      },
+
+      _clearResults () {
+        this.results = {
+          count: 0,
+          passed: [],
+          failed: [],
+          error: null,
+        }
       },
 
       // "ok" - obviously
@@ -199,6 +221,7 @@
 
       submit () {
         this.isSubmitting = true
+        this._clearResults()
 
         return this
           .$http
@@ -239,9 +262,10 @@
             failed: grouped.failed || [],
           }
         } else {
-          // TODO
-          this.log(output)
-          this.log(errors)
+          this.results.error = {
+            message: output,
+            details: errors,
+          }
         }
       },
 
@@ -285,12 +309,23 @@
   }
 </style>
 
-<style lang="less">
+<style lang="less" scoped>
   @import "~assets/less/variables";
+
+  .result-status {
+    font-size: 16px;
+    margin-bottom: 12px;
+    vertical-align: middle;
+  }
+
+  .test-status {
+    font-weight: 600;
+    vertical-align: middle;
+  }
 
   .ui-icon-sm {
     font-size: 16px;
-    // vertical-align: text-top;;
+    font-weight: 700;
   }
 
   .ui-toolbar.ui-toolbar-sm {
