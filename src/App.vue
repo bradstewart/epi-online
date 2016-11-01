@@ -83,7 +83,6 @@
     margin: 0;
     padding: 0;
     background: transparent;
-    font-size: 10px;
   }
 
   .material-icons {
