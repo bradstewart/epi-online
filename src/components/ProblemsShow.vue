@@ -56,7 +56,11 @@
               </div>
               <ul v-else class="list-unstyled">
                 <li v-for="result in results.passed" >
-                  <ui-icon icon="done" class="text-success ui-icon-sm"></ui-icon>
+                  <span class="label label-success monospace">
+                    <ui-icon icon="done" class="ui-icon-sm"></ui-icon>
+                    PASS
+                  </span>
+
                   <span class="test-status text-success">
                     {{ result.description }}
                   </span>
@@ -67,19 +71,22 @@
             <div v-if="results.failed">
               <ul class="list-unstyled">
                 <li v-for="result in results.failed">
-                  <ui-icon icon="clear" class="text-danger ui-icon-sm"></ui-icon>
+                  <span class="label label-danger monospace">
+                    <ui-icon icon="clear" class="ui-icon-sm"></ui-icon>
+                    FAIL
+                  </span>
                   <span class="test-status text-danger">
                     {{ result.description }}
                   </span>
                   <div style="margin-left: 26px;">
                     <div>
-                      Input: <code v-text="result.input | json"></code>
+                      Input <code v-text="result.input | json"></code>
                     </div>
                     <div>
-                      Expected: <code v-text="result.expected_output"></code>
+                      Expected <code v-text="result.expected_output"></code>
                     </div>
                     <div>
-                      Actual: <code v-text="result.user_output"></code>
+                      Actual <code v-text="result.user_output"></code>
                     </div>
                   </div>
                 </li>
@@ -312,6 +319,10 @@
 <style lang="less" scoped>
   @import "~assets/less/variables";
 
+  ul.list-unstyled {
+    margin-bottom: 0;
+  }
+
   .result-status {
     font-size: 16px;
     margin-bottom: 12px;
@@ -319,12 +330,14 @@
   }
 
   .test-status {
-    font-weight: 600;
+    margin-left: 12px;
     vertical-align: middle;
+    font-weight: 600;
   }
 
   .ui-icon-sm {
-    font-size: 16px;
+    font-size: 13px;
+    vertical-align: text-top;
     font-weight: 700;
   }
 
